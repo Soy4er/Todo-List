@@ -8,8 +8,7 @@
 export default {
   methods: {
     createNote() {
-      const allNotes = this.$store.getters["allNotes"],
-        noteID = allNotes.length === 0 ? 1 : allNotes[allNotes.length - 1] + 1;
+      const noteID = this.$store.getters["allNotes"].length+1;
       this.$router.push({ name: "updateNote", params: { id: noteID } });
     }
   }

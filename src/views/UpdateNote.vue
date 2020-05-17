@@ -71,7 +71,7 @@
           <div
             class="buttons__note-trash buttons__item"
             @click="show = !show"
-            v-if="type === 'Update'"
+            v-if="this.note"
           >
             <font-awesome-icon :icon="['far', 'trash-alt']" />Delete a note
           </div>
@@ -110,18 +110,17 @@ export default {
   methods: {
     undoChanges() {
       if (this.note) {
-        this.noteNameValue = this.note ? this.note.name : this.noteNameValue;
+        this.noteNameValue = this.note.name;
+        this.tasks = Array.from(this.note.tasks);
+      } else {
+        this.noteNameValue = '';
         this.tasks = [];
-        this.note.tasks.forEach(task => {
-          this.tasks.push(task);
-        });
       }
       this.showUndo = false;
     },
     createTask() {
-      const id =
-        this.tasks.length === 0 ? 0 : this.tasks[this.tasks.length - 1].id + 1;
-      this.tasks.push({ id: id, name: "", done: false });
+      const id = this.tasks.length ? this.tasks[this.tasks.length - 1].id + 1 : 0 ;
+      this.tasks.push({ id, name: "", done: false });
     },
     deleteTask(index) {
       this.tasks.splice(index, 1);
@@ -133,9 +132,12 @@ export default {
     submit: function() {
       // Удаление пустых тасков
       this.tasks.forEach(element => {
-        if (element.name === "")
-          if (this.tasks.indexOf(element) >= 0)
-            this.tasks.splice(this.tasks.indexOf(element), 1);
+        if (element.name === "") {
+          const index = this.tasks.indexOf(element)
+          if (index >= 0) {
+            this.tasks.splice(index, 1);
+          }
+        }
       });
 
       const note = {
@@ -148,10 +150,8 @@ export default {
   },
   async mounted() {
     if (this.note) {
-      this.noteNameValue = this.note ? this.note.name : this.noteNameValue;
-      this.note.tasks.forEach(task => {
-        this.tasks.push(task);
-      });
+      this.noteNameValue = this.note.name;
+      this.tasks = Array.from(this.note.tasks);
     }
   },
   computed: {
