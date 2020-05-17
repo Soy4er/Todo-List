@@ -50,11 +50,11 @@ export default {
   methods: {
     showDelete(id) {
       this.showConfirm = [];
-      this.$set(this.showConfirm, id, true)
+      this.$set(this.showConfirm, id, true);
     },
     hiddenDelete(id) {
       this.showConfirm = [];
-      this.$set(this.showConfirm, id, false)
+      this.$set(this.showConfirm, id, false);
     },
     deleteNote(id) {
       this.$store.commit("deleteNote", id);

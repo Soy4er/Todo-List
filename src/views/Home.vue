@@ -15,18 +15,18 @@ import CreateNote from "@/components/CreateNote.vue";
 export default {
   components: {
     Notes,
-    CreateNote,
+    CreateNote
   }
-}
+};
 </script>
 
 <style lang="scss">
-  .todo-list {
-    margin-top: 50px;
-    & h1 {
-      font-size: $font-size-xl;
-      margin-bottom: 20px;
-      text-align: center;
-    }
+.todo-list {
+  margin-top: 50px;
+  & h1 {
+    font-size: $font-size-xl;
+    margin-bottom: 20px;
+    text-align: center;
   }
+}
 </style>
