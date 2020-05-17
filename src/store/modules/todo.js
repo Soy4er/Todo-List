@@ -3,38 +3,56 @@ import Vue from 'vue'
 export default {
   actions: {
     async startApp(ctx) {
-      if (Vue.localStorage.get('notes'))
-        ctx.commit('lsToNote')
-      else
-        ctx.commit('updateLS')
+      const type = Vue.localStorage.get('notes') ? 'updateNotes' : 'updateLS' ;
+      ctx.commit(type)
     },
   },
   mutations: {
-    lsToNote(state) {
+    updateNotes(state) {
       const notes = JSON.parse(Vue.localStorage.get('notes'))
       state.notes = notes
     },
 
     updateLS(state) {
       Vue.localStorage.set('notes', '')
-      if (state.notes)
-        Vue.localStorage.set('notes', JSON.stringify(state.notes))
+      Vue.localStorage.set('notes', state.notes ? JSON.stringify(state.notes) : '')
     },
 
-    updateNote(state, newNote) {
-      const note = state.notes.find(({ id }) => id == newNote.id),
-        indexLastNote = state.notes.indexOf(state.notes[state.notes.length - 1]),
-        index = (state.notes.indexOf(note) >= 0) ? state.notes.indexOf(note) : ((indexLastNote >= 0) ? indexLastNote : 0)
-      state.notes[index] = newNote
-      this.commit('updateLS')
+    updateNote(state, note) {
+      const index = state.notes.findIndex(({ id }) => id == note.id),
+        type = index < 0 ? 'created' : 'updated';
 
+      if (index < 0) {
+        state.notes.push(note);
+      } else {
+        state.notes[index] = note;
+      }
+
+      this.commit('updateLS');
+
+      Vue.notify({
+        group: 'notification',
+        type: 'success',
+        title: `Note ${type}`,
+        text: `The "${note.name}" entry was ${type} successfully!`,
+        duration: 10000
+      })
     },
 
     deleteNote(state, noteID) {
       const note = state.notes.find(({ id }) => id == noteID),
         index = state.notes.indexOf(note);
-      state.notes.splice(index, 1)
-      this.commit('updateLS')
+      state.notes.splice(index, 1);
+
+      this.commit('updateLS');
+
+      Vue.notify({
+        group: 'notification',
+        type: 'success',
+        title: 'Deleting a note',
+        text: `The "${note.name}" note was successfully deleted!`,
+        duration: 10000
+      });
     },
   },
   state: {
