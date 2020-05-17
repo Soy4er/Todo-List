@@ -57,7 +57,7 @@
             <font-awesome-icon icon="undo-alt" />Undo changes to a note
           </div>
           <transition name="fade">
-            <div class="confirm-deletion" v-if="showUndo">
+            <div class="confirm-deletion confirm-deletion--undo" v-if="showUndo" v-click-outside="onClickOutsideUndo">
               <p>Are you sure you want to undo the changes?</p>
               <div class="confirm-deletion__button">
                 <div class="confirm-deletion__button-cancel btn" @click="showUndo = false">Cancel</div>
@@ -76,7 +76,7 @@
             <font-awesome-icon :icon="['far', 'trash-alt']" />Delete a note
           </div>
           <transition name="fade">
-            <div class="confirm-deletion" v-if="show">
+            <div class="confirm-deletion confirm-deletion--delete" v-if="show" v-click-outside="onClickOutsideDelete">
               <p>Are you sure you want to delete note?</p>
               <div class="confirm-deletion__button">
                 <div class="confirm-deletion__button-cancel btn" @click="show = false">Cancel</div>
@@ -108,6 +108,12 @@ export default {
     };
   },
   methods: {
+    onClickOutsideUndo() {
+      this.showUndo = false;
+    },
+    onClickOutsideDelete() {
+      this.show = false;
+    },
     undoChanges() {
       if (this.note) {
         this.noteNameValue = this.note.name;
@@ -174,8 +180,11 @@ export default {
   left: 1250px;
   user-select: none;
   outline: none;
-  & .confirm-deletion {
+  & .confirm-deletion--undo {
     top: 120px;
+  }
+  & .confirm-deletion--delete {
+    top: 160px;
   }
   &__item {
     width: 30px;
