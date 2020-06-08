@@ -1,34 +1,49 @@
 import Vue from 'vue'
+import axios from 'axios'
 
 export default {
   actions: {
     async startApp(ctx) {
-      const type = Vue.localStorage.get('notes') ? 'updateNotes' : 'updateLS' ;
-      ctx.commit(type)
+      if (!localStorage.getItem('notes')) {
+        axios.get('notes.json')
+          .then((response) => {
+            ctx.commit('updateNotes', response.data)
+          })
+          .catch((error) => {
+            Vue.notify({
+              group: 'notification',
+              type: 'error',
+              title: `Error loading records`,
+              text: error.response.data,
+              duration: 10000
+            })
+          });
+      } else {
+        ctx.commit('updateNotes', JSON.parse(localStorage.getItem('notes')))
+      }
     },
   },
   mutations: {
-    updateNotes(state) {
-      const notes = JSON.parse(Vue.localStorage.get('notes'))
+    updateNotes(state, notes) {
       state.notes = notes
+      this.commit('updateLocalStorage');
     },
 
-    updateLS(state) {
-      Vue.localStorage.set('notes', '')
-      Vue.localStorage.set('notes', state.notes ? JSON.stringify(state.notes) : '')
+    updateLocalStorage(state) {
+      state.notes ? localStorage.setItem('notes', JSON.stringify(state.notes)) : localStorage.clear();
     },
 
     updateNote(state, note) {
-      const index = state.notes.findIndex(({ id }) => id == note.id),
+      let notes = state.notes;
+      const index = notes.findIndex(({ id }) => id == note.id),
         type = index < 0 ? 'created' : 'updated';
 
-      if (index < 0) {
-        state.notes.push(note);
-      } else {
-        state.notes[index] = note;
-      }
+      if (index < 0) 
+        notes.push(note);
+      else 
+        notes[index] = note;
 
-      this.commit('updateLS');
+      this.commit('updateLocalStorage');
 
       Vue.notify({
         group: 'notification',
@@ -40,11 +55,12 @@ export default {
     },
 
     deleteNote(state, noteID) {
-      const note = state.notes.find(({ id }) => id == noteID),
-        index = state.notes.indexOf(note);
-      state.notes.splice(index, 1);
+      let notes = state.notes;
+      const note = notes.find(({ id }) => id == noteID),
+        index = notes.indexOf(note);
+      notes.splice(index, 1);
 
-      this.commit('updateLS');
+      this.commit('updateLocalStorage');
 
       Vue.notify({
         group: 'notification',
@@ -56,40 +72,11 @@ export default {
     },
   },
   state: {
-    notes: [
-      {
-        id: 1,
-        name: 'Home page',
-        tasks: [
-          { id: 1, name: 'To pick up the banners for the main slider', done: true },
-          { id: 2, name: 'To develop the array of benefits the company', done: true },
-          { id: 3, name: 'Modify the layout of the catalog block and display it on the working site', done: false },
-          { id: 4, name: 'Fix the gallery of works and add new works of the company', done: false },
-          { id: 5, name: 'Develop a standard version of the feedback form', done: false },
-        ],
-      },
-      {
-        id: 2,
-        name: 'Contact page',
-        tasks: [
-          { id: 1, name: 'Change the company address and one of the phone numbers', done: false },
-          { id: 2, name: 'Add a feedback form', done: false },
-          { id: 3, name: 'Fix the employee slider', done: false },
-        ],
-      },
-      {
-        id: 3,
-        name: 'Page about the company',
-        tasks: [
-          { id: 1, name: 'Bring out new employees', done: true },
-          { id: 2, name: 'To improve margins at the company history', done: false },
-        ],
-      },
-    ],
+    notes: [],
   },
   getters: {
-    allNotes(state) {
-      return state.notes
-    },
+    getNotes(state) { return state.notes },
+    getNoteByID: (state) => (noteID) => { return state.notes.find(({ id }) => id == noteID) },
+    countNotes(state) { return state.notes.length }
   }
 }

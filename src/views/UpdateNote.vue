@@ -1,23 +1,22 @@
 <template>
-  <div class="container">
-    <div class="update-note">
-      <h1>{{`${type} Note`}}</h1>
-
-      <form @submit.prevent="submit">
-        <div class="update-note__name-note">
+  <main>
+    <div class="container">
+      <h1 class="title text-center mt-50 mb-10">{{`${this.getNote ? 'Update' : 'Create'} Note`}}</h1>
+      <form @submit.prevent="submit" class="note">
+        <div class="note-name mb-10">
           <input
             type="text"
             name="noteName"
             id="noteName"
             required
-            v-model="noteNameValue"
-            class="update-note__input"
+            v-model.trim="note.name"
+            class="note-input"
             placeholder="Note name"
           />
         </div>
-        <div class="update-note__tasks">
-          <div class="update-note__task" v-for="(task, index) in tasks" :key="index">
-            <div class="update-note__task-checkbox">
+        <div class="note-tasks">
+          <div class="note-tasks__item mb-10" v-for="(task, index) in note.tasks" :key="index">
+            <div class="note-tasks__item-element note-tasks__item-checkbox">
               <input
                 type="checkbox"
                 :name="`done_${task.id}`"
@@ -28,277 +27,148 @@
                 <font-awesome-icon icon="check" />
               </label>
             </div>
-            <div class="update-note__task-name">
-              <input
-                type="text"
+            <div class="note-tasks__item-element note-tasks__item-name">
+              <TextareaAutosize
+                :min-height="20"
+                :max-height="100"
                 :name="`name_${task.id}`"
                 :id="`name_${task.id}`"
-                v-model="task.name"
-                class="update-note__input"
+                v-model.trim="task.name"
+                class="note-input"
                 placeholder="Task name"
               />
             </div>
-            <div class="update-note__task-delete" @click="deleteTask(index)">
-              <div>
+            <div class="note-tasks__item-element">
+              <div class="note-tasks__item-delete" @click="deleteTask(index)">
                 <font-awesome-icon icon="times" />
               </div>
             </div>
           </div>
         </div>
-
-        <div class="buttons">
-          <router-link :to="{name: 'home'}" class="buttons__goback buttons__item">
-            <font-awesome-icon icon="long-arrow-alt-left" />Go back to the main page
-          </router-link>
-          <div class="buttons__task-create buttons__item" @click="createTask">
-            <font-awesome-icon icon="plus" />Create a new task
-          </div>
-          <div class="buttons__undo buttons__item" @click="showUndo = !showUndo">
-            <font-awesome-icon icon="undo-alt" />Undo changes to a note
-          </div>
-          <transition name="fade">
-            <div class="confirm-deletion confirm-deletion--undo" v-if="showUndo" v-click-outside="onClickOutsideUndo">
-              <p>Are you sure you want to undo the changes?</p>
-              <div class="confirm-deletion__button">
-                <div class="confirm-deletion__button-cancel btn" @click="showUndo = false">Cancel</div>
-                <div
-                  class="confirm-deletion__button-confirm btn btn--primary"
-                  @click="undoChanges"
-                >Confirm</div>
-              </div>
-            </div>
-          </transition>
-          <div
-            class="buttons__note-trash buttons__item"
-            @click="show = !show"
-            v-if="this.note"
-          >
-            <font-awesome-icon :icon="['far', 'trash-alt']" />Delete a note
-          </div>
-          <transition name="fade">
-            <div class="confirm-deletion confirm-deletion--delete" v-if="show" v-click-outside="onClickOutsideDelete">
-              <p>Are you sure you want to delete note?</p>
-              <div class="confirm-deletion__button">
-                <div class="confirm-deletion__button-cancel btn" @click="show = false">Cancel</div>
-                <div
-                  class="confirm-deletion__button-confirm btn btn--primary"
-                  @click="deleteNote"
-                >Confirm</div>
-              </div>
-            </div>
-          </transition>
-          <button type="submit" class="buttons__note-save buttons__item">
-            <font-awesome-icon icon="check" />Save a note
-          </button>
-        </div>
+        <NoteButtons @createTask="createTask" :noteID="noteID" />
       </form>
     </div>
-  </div>
+  </main>
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+import NoteButtons from "@/components/NoteButtons.vue";
+
 export default {
   data() {
     return {
       noteID: this.$route.params.id,
-      noteNameValue: "",
-      tasks: [],
-      show: false,
-      showUndo: false
+      note: { name: "", tasks: [] }
     };
   },
   methods: {
-    onClickOutsideUndo() {
-      this.showUndo = false;
-    },
-    onClickOutsideDelete() {
-      this.show = false;
-    },
-    undoChanges() {
-      if (this.note) {
-        this.noteNameValue = this.note.name;
-        this.tasks = Array.from(this.note.tasks);
-      } else {
-        this.noteNameValue = '';
-        this.tasks = [];
-      }
-      this.showUndo = false;
-    },
-    createTask() {
-      const id = this.tasks.length ? this.tasks[this.tasks.length - 1].id + 1 : 0 ;
-      this.tasks.push({ id, name: "", done: false });
+    createTask(newTask) {
+      this.note.tasks.push(newTask);
     },
     deleteTask(index) {
-      this.tasks.splice(index, 1);
-    },
-    deleteNote() {
-      this.$store.commit("deleteNote", this.noteID);
-      this.$router.push({ name: "home" });
+      this.note.tasks.splice(index, 1);
     },
     submit: function() {
-      // Удаление пустых тасков
-      this.tasks.forEach(element => {
-        if (element.name === "") {
-          const index = this.tasks.indexOf(element)
-          if (index >= 0) {
-            this.tasks.splice(index, 1);
-          }
+      // Removal of empty tasks
+      const note = this.note;
+      note.tasks.forEach(element => {
+        if (!element.name) {
+          const index = note.tasks.indexOf(element);
+          if (index >= 0) note.tasks.splice(index, 1);
         }
       });
 
-      const note = {
+      this.$store.commit("updateNote", {
         id: this.noteID,
-        name: this.noteNameValue,
-        tasks: this.tasks
-      };
-      this.$store.commit("updateNote", note);
+        name: note.name,
+        tasks: note.tasks
+      });
     }
   },
   async mounted() {
-    if (this.note) {
-      this.noteNameValue = this.note.name;
-      this.tasks = Array.from(this.note.tasks);
+    if (this.getNote) {
+      this.note.name = this.getNote.name;
+      this.note.tasks = this.getNote.tasks;
     }
   },
   computed: {
-    type() {
-      return this.note ? "Update" : "Create";
-    },
-    note() {
-      return this.$store.getters["allNotes"].find(
-        ({ id }) => id == this.noteID
-      );
+    ...mapGetters(["getNoteByID"]),
+    getNote() {
+      return this.getNoteByID(this.noteID);
     }
+  },
+  components: {
+    NoteButtons
   }
 };
 </script>
 
-<style lang="scss">
-.buttons {
-  position: fixed;
-  top: 120px;
-  left: 1250px;
-  user-select: none;
-  outline: none;
-  & .confirm-deletion--undo {
-    top: 120px;
-  }
-  & .confirm-deletion--delete {
-    top: 160px;
-  }
-  &__item {
-    width: 30px;
-    height: 30px;
-    overflow: hidden;
-    background-color: #7047f5;
-    color: #fff;
-    border-radius: 20px;
-    transition: 0.3s;
-    display: flex;
-    align-items: center;
-    white-space: nowrap;
-    position: relative;
-    cursor: pointer;
-    margin-bottom: 10px;
-    &:last-child {
-      margin-bottom: 0;
-    }
-    & svg {
-      padding: 0 9px;
-    }
-  }
-  &__task-create:hover {
-    width: 165px;
-  }
-  &__note-trash:hover {
-    width: 135px;
-  }
-  &__note-save {
-    & svg {
-      padding-left: 0;
-    }
-    &:hover {
-      width: 125px;
-    }
-  }
-  &__goback:hover {
-    width: 225px;
-  }
-  &__undo:hover {
-    width: 210px;
-  }
-}
-
-.update-note {
-  margin-top: 50px;
-  & h1 {
-    font-size: $font-size-xl;
-    margin-bottom: 20px;
-    text-align: center;
-  }
-  & form {
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 5px;
-    width: 500px;
-    margin: 0 auto;
-    box-shadow: 0 5px 6px 0px #d6d6d6;
-  }
-  &__input {
+<style lang="scss" scoped>
+.note {
+  background-color: $white;
+  padding: 20px;
+  border-radius: 5px;
+  width: 500px;
+  margin: 0 auto;
+  box-shadow: 0 5px 6px 0px #d6d6d6;
+  &-input {
     border: none;
     padding: 0;
-    width: 400px;
-    height: 25px;
-    border-radius: 5px;
-    background-color: #eee;
-    padding: 10px;
-  }
-  &__name-note {
     width: 100%;
-    margin-bottom: 0;
+    background-color: inherit;
+    line-height: $line-height-md;
+  }
+  &-name {
     font-size: $font-size-lg;
+    background-color: $gray-300;
+    border-radius: 5px;
+    padding: 10px;
     & input {
       font-size: $font-size-lg;
-      width: calc(100% - 20px);
     }
   }
-  &__task {
-    display: flex;
-    margin-top: 10px;
-    &-checkbox {
-      display: flex;
-      align-items: center;
-      & input {
-        display: none;
-        &:checked + label svg {
-          display: block;
-        }
+  &-tasks {
+    &__item {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      grid-column-gap: 10px;
+      &:last-child {
+        margin-bottom: 0;
       }
-      & label {
-        width: 30px;
-        height: 30px;
-        background-color: #eee;
+      &-element {
         display: flex;
         align-items: center;
         justify-content: center;
-        border-radius: 50%;
-        cursor: pointer;
-        & svg {
+      }
+      &-name {
+        background-color: $gray-300;
+        border-radius: 5px;
+        padding: 10px;
+      }
+      &-checkbox {
+        & input {
           display: none;
-          color: $primary;
+          &:checked + label svg {
+            display: block;
+          }
+        }
+        & label {
+          width: 30px;
+          height: 30px;
+          background-color: $gray-300;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border-radius: 50%;
+          cursor: pointer;
+          & svg {
+            display: none;
+            color: $primary;
+          }
         }
       }
-    }
-    &-name {
-      height: 100%;
-      margin: 0 10px;
-    }
-    &-delete {
-      width: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      & div {
+      &-delete {
         width: 30px;
         height: 30px;
         background-color: #eee;

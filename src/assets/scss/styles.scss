@@ -1,6 +1,22 @@
 @import "_normalize.scss";
 @import "_variables.scss";
 
+
+@media (min-width: 576px) {
+    .container {
+        max-width: 540px;
+    }
+}
+@media (min-width: 768px) {
+    .container {
+        max-width: 720px;
+    }
+}
+@media (min-width: 992px) {
+    .container {
+        max-width: 960px;
+    }
+}
 @media (min-width: 1200px) {
     .container {
         max-width: 1140px;
@@ -8,7 +24,7 @@
 }
 
 .container {
-    width        : 100%;
+    width: 100%;
     padding-right: 15px;
     padding-left : 15px;
     margin-right : auto;
@@ -49,6 +65,21 @@ a {
 
 th {
     font-weight: 500;
+}
+
+ul {
+    margin: 0;
+    padding: 0;
+}
+
+.title {
+    font-size: $font-size-xl;
+}
+
+@media (max-width: 576px) {
+    .title {
+        font-size: $font-size-lg;
+    }
 }
 
 .item-checkbox {
@@ -102,10 +133,10 @@ th {
     }
 }
 
-.confirm-deletion {
+.confirmation-panel {
     position        : absolute;
     top             : 30px;
-    left            : -100px;
+    right           : -10px;
     background-color: $white;
     color           : $black;
     padding         : 15px;
@@ -116,7 +147,7 @@ th {
     z-index         : 1;
     user-select     : none;
 
-    &__button {
+    &__buttons {
         display        : flex;
         margin-top     : 10px;
         justify-content: center;
@@ -131,4 +162,33 @@ textarea:focus,
 input:focus,
 button:focus {
     outline: none;
+}
+
+.d-flex {
+    display: flex;
+}
+
+.p-relative {
+    position: relative;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.mt-50 {
+    margin-top: 50px;
+}
+.mb-50 {
+    margin-bottom: 50px;
+}
+
+.mb-10 {
+    margin-bottom: 10px;
+}
+.mt-10 {
+    margin-top: 10px;
+}
+.mr-10 {
+    margin-right: 10px;
 }

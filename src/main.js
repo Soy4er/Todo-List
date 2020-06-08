@@ -9,16 +9,16 @@ import { faPlus, faCheck, faLongArrowAltLeft, faTimes, faUndoAlt } from '@fortaw
 import { faEdit, faTrashAlt } from '@fortawesome/free-regular-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import vClickOutside from 'v-click-outside'
-import VueLocalStorage from 'vue-localstorage'
 import Notifications from 'vue-notification'
+import VueTextareaAutosize from 'vue-textarea-autosize'
 
 library.add(faPlus, faEdit, faTrashAlt, faCheck, faLongArrowAltLeft, faTimes, faUndoAlt)
 
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 
 Vue.use(vClickOutside)
-Vue.use(VueLocalStorage)
 Vue.use(Notifications)
+Vue.use(VueTextareaAutosize)
 
 Vue.config.productionTip = false
 
