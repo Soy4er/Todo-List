@@ -109,11 +109,14 @@ export default {
 
 <style lang="scss" scoped>
 .buttons-bar {
-  position: fixed;
-  top: 120px;
-  left: 1250px;
+  position: absolute;
+  top: 20px;
+  left: 520px;
   user-select: none;
   outline: none;
+  & .confirmation-panel {
+    left: -80px;
+  }
   & .confirmation-panel--undo {
     top: 80px;
   }
@@ -134,12 +137,13 @@ export default {
     position: relative;
     cursor: pointer;
     margin-bottom: 10px;
+    padding: 0;
     border: none;
     &:last-child {
       margin-bottom: 0;
     }
     & svg {
-      padding: 0 9px;
+      margin: 0 9px;
     }
   }
   &__task-create:hover {
@@ -149,9 +153,6 @@ export default {
     width: 135px;
   }
   &__note-save {
-    & svg {
-      padding-left: 3px;
-    }
     &:hover {
       width: 125px;
     }
@@ -161,6 +162,26 @@ export default {
   }
   &__undo:hover {
     width: 210px;
+  }
+}
+
+@media (max-width: 768px) {
+  .buttons-bar {
+    background-color: #efefef;
+    width: calc(100% - 30px);
+    left: 15px;
+    height: 50px;
+    border-radius: 20px;
+    box-shadow: 0 3px 4px #e4e4e4;
+    position: fixed;
+    bottom: 20px;
+    top: auto;
+    &__item {
+      position: absolute;
+      bottom: 10px;
+      left: calc(50% - 25px);
+      box-shadow: 0 3px 4px #888888;
+    }
   }
 }
 </style>

@@ -4,8 +4,9 @@ import axios from 'axios'
 export default {
   actions: {
     async startApp(ctx) {
+      localStorage.clear()
       if (!localStorage.getItem('notes')) {
-        axios.get('notes.json')
+        axios.get('/notes.json')
           .then((response) => {
             ctx.commit('updateNotes', response.data)
           })
@@ -38,9 +39,9 @@ export default {
       const index = notes.findIndex(({ id }) => id == note.id),
         type = index < 0 ? 'created' : 'updated';
 
-      if (index < 0) 
+      if (index < 0)
         notes.push(note);
-      else 
+      else
         notes[index] = note;
 
       this.commit('updateLocalStorage');
@@ -76,7 +77,7 @@ export default {
   },
   getters: {
     getNotes(state) { return state.notes },
-    getNoteByID: (state) => (noteID) => { return state.notes.find(({ id }) => id == noteID) },
+    getNoteByID: (state) => (noteID) => { console.log(state.notes);return state.notes.find(({ id }) => id == noteID) },
     countNotes(state) { return state.notes.length }
   }
 }

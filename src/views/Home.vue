@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <main class="todo-list">
-      <h1 class="title text-center mb-10 mt-10">TODO List</h1>
+      <h1 class="title text-center mb-10">TODO List</h1>
       <Notes />
     </main>
     <ButtonCreateNote />

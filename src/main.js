@@ -11,6 +11,7 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import vClickOutside from 'v-click-outside'
 import Notifications from 'vue-notification'
 import VueTextareaAutosize from 'vue-textarea-autosize'
+import { Swipeable } from 'vue-swipeable';
 
 library.add(faPlus, faEdit, faTrashAlt, faCheck, faLongArrowAltLeft, faTimes, faUndoAlt)
 
@@ -19,6 +20,7 @@ Vue.component('font-awesome-icon', FontAwesomeIcon)
 Vue.use(vClickOutside)
 Vue.use(Notifications)
 Vue.use(VueTextareaAutosize)
+Vue.directive('swipeable', Swipeable)
 
 Vue.config.productionTip = false
 

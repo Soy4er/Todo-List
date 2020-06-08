@@ -13,7 +13,7 @@ import { mapGetters } from "vuex";
 export default {
   methods: {
     goToCreateNote() { this.$router.push({ name: "updateNote", params: { id: this.countNotes + 1 } }) }
-  }, 
+  },
   computed: {
     ...mapGetters([ 'countNotes' ])
   }
@@ -25,6 +25,7 @@ export default {
   position: fixed;
   bottom: 50px;
   left: 50px;
+  z-index: 10;
   &__button {
     width: 50px;
     height: 50px;
@@ -54,7 +55,7 @@ export default {
     left: 20px;
   }
 }
-@media (max-width: 576px) {
+@media (max-width: 768px) {
   .create-note {
     background-color: #efefef;
     width: calc(100% - 30px);
