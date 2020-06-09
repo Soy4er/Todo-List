@@ -43,12 +43,14 @@
       </div>
     </div>
     <NoteButtons @createTask="createTask" :noteID="noteID" />
+    <NoteButtonsMobile @createTask="createTask" :noteID="noteID" />
   </form>
 </template>
 
 <script>
 import { mapGetters } from "vuex";
 import NoteButtons from "@/components/NoteButtons.vue";
+import NoteButtonsMobile from "@/components/NoteButtonsMobile.vue";
 
 export default {
   props: ['noteID'],
@@ -95,7 +97,8 @@ export default {
     }
   },
   components: {
-    NoteButtons
+    NoteButtons,
+    NoteButtonsMobile
   }
 };
 </script>
@@ -181,6 +184,12 @@ export default {
         }
       }
     }
+  }
+}
+
+@media (max-width: 768px) {
+  .note {
+    width: auto;
   }
 }
 </style>

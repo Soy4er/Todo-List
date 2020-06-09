@@ -1,19 +1,38 @@
 <template>
   <div class="buttons-bar">
-    <button
-      type="button"
-      class="buttons-bar__task-create buttons-bar__item btn btn--circle"
-      @click="createTask"
-    >
-      <font-awesome-icon icon="plus" />Create a new task
-    </button>
-    <button
-      type="button"
-      class="buttons-bar__undo buttons-bar__item btn btn--circle"
-      @click="showConfirmUndo = !showConfirmUndo"
-    >
-      <font-awesome-icon icon="undo-alt" />Undo changes to a note
-    </button>
+    <div class="buttons-bar__content">
+      <div class="buttons-bar__left">
+        <button
+          type="button"
+          class="buttons-bar__undo buttons-bar__item btn btn--circle"
+          @click="showConfirmUndo = !showConfirmUndo"
+        >
+          <font-awesome-icon icon="undo-alt" />
+        </button>
+        <button
+          type="button"
+          class="buttons-bar__note-trash buttons-bar__item btn btn--circle"
+          @click="showConfirmDeletion = !showConfirmDeletion"
+          v-if="this.getNote"
+        >
+          <font-awesome-icon :icon="['far', 'trash-alt']" />
+        </button>
+      </div>
+      <div class="buttons-bar__center">     
+        <button type="submit" class="buttons-bar__note-save buttons-bar__item">
+          <font-awesome-icon icon="check" />
+        </button>
+      </div>
+      <div class="buttoms-bar__right">
+        <button
+          type="button"
+          class="buttons-bar__task-create buttons-bar__item btn btn--circle"
+          @click="createTask"
+        >
+          <font-awesome-icon icon="plus" />
+        </button>
+      </div>
+    </div>
     <transition name="fade">
       <div
         class="confirmation-panel confirmation-panel--undo"
@@ -34,14 +53,6 @@
         </div>
       </div>
     </transition>
-    <button
-      type="button"
-      class="buttons-bar__note-trash buttons-bar__item btn btn--circle"
-      @click="showConfirmDeletion = !showConfirmDeletion"
-      v-if="this.getNote"
-    >
-      <font-awesome-icon :icon="['far', 'trash-alt']" />Delete a note
-    </button>
     <transition name="fade">
       <div
         class="confirmation-panel confirmation-panel--delete"
@@ -62,9 +73,6 @@
         </div>
       </div>
     </transition>
-    <button type="submit" class="buttons-bar__note-save buttons-bar__item">
-      <font-awesome-icon icon="check" />Save a note
-    </button>
   </div>
 </template>
 
@@ -109,65 +117,38 @@ export default {
 
 <style lang="scss" scoped>
 .buttons-bar {
-  position: absolute;
-  top: 20px;
-  left: 520px;
-  user-select: none;
-  outline: none;
-  & .confirmation-panel {
-    left: -80px;
-  }
-  & .confirmation-panel--undo {
-    top: 80px;
-  }
-  & .confirmation-panel--delete {
-    top: 120px;
+  &__content {
+    display: grid;
+    grid-template-columns: 1fr 50px 1fr;
+    grid-column-gap: 10px;
+    height: 100%;
+    padding: 10px 20px;
   }
   &__item {
-    width: 30px;
-    height: 30px;
+    border: none;
+    background-color: initial;
+  }
+  &__note-save {
+    position: absolute;
+    bottom: 10px;
+    left: calc(50% - 25px);
+    box-shadow: 0 3px 4px #888888;
+    width: 50px;
+    height: 50px;
     overflow: hidden;
     background-color: $primary;
     color: $white;
-    border-radius: 20px;
-    transition: 0.3s;
+    border-radius: 50px;
+    transition: .3s;
     display: flex;
     align-items: center;
     white-space: nowrap;
-    position: relative;
-    cursor: pointer;
-    margin-bottom: 10px;
     padding: 0;
-    border: none;
-    &:last-child {
-      margin-bottom: 0;
-    }
+    cursor: pointer;
+    border: 0;
     & svg {
-      margin: 0 9px;
+      margin: 0 19px;
     }
-  }
-  &__task-create:hover {
-    width: 165px;
-  }
-  &__note-trash:hover {
-    width: 135px;
-  }
-  &__note-save {
-    &:hover {
-      width: 125px;
-    }
-  }
-  &__goback:hover {
-    width: 225px;
-  }
-  &__undo:hover {
-    width: 210px;
-  }
-}
-
-@media (max-width: 768px) {
-  .buttons-bar {
-    display: none;
   }
 }
 </style>

@@ -160,6 +160,28 @@ ul {
     }
 }
 
+.buttons-bar { 
+  user-select: none;
+  outline: none;
+  background-color: #efefef;
+  width: calc(100% - 30px);
+  left: 15px;
+  height: 50px;
+  border-radius: 20px;
+  box-shadow: 0 3px 4px #e4e4e4;
+  position: fixed;
+  bottom: 20px;
+  top: auto;
+  display: none;
+}
+
+@media (max-width: 768px) {
+    .buttons-bar {
+      display: block;
+    }
+}
+
+
 textarea:focus,
 input:focus,
 button:focus {
