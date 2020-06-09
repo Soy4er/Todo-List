@@ -1,9 +1,9 @@
 <template>
   <div class="notes">
     <div class="note" v-for="(note, index) in notes" :key="index">
-      <div class="note-content" v-swipeable="dragToRefresh" @swiped="toggleDeletePanel(note.id)">
+      <div class="note-content" v-swipeable="dragToRefresh">
         <div class="note-header">
-          <router-link :to="{name: 'updateNote', params: {id: note.id}}" class="note-header__name">{{note.name}}</router-link>
+          <div class="note-header__name">{{note.name}}</div>
           <div class="note-header__buttons d-flex">
             <div class="note-header__icon p-relative">
               <font-awesome-icon :icon="['far', 'trash-alt']" @click="toggleDeletePanel(note.id)" />
@@ -17,8 +17,13 @@
           </li>
         </ul>
       </div>
-      <div class="note-delete">
-        <font-awesome-icon :icon="['far', 'trash-alt']" @click="toggleDeletePanel(note.id)" />
+      <div class="note-buttons">
+        <router-link :to="{name: 'updateNote', params: {id: note.id}}" class="note-buttons__item note-buttons__item--edit">
+          <font-awesome-icon :icon="['far', 'edit']" />
+        </router-link>
+        <button type="button" class="note-buttons__item note-buttons__item--detele" @click="toggleDeletePanel(note.id)">
+          <font-awesome-icon :icon="['far', 'trash-alt']" />
+        </button>
       </div>
       <transition name="fade">
         <div class="confirmation-panel" v-if="showConfirmDeletion[note.id]">
@@ -48,16 +53,16 @@ export default {
       showConfirmDeletion: [],
       dragToRefresh: {
         type: 'horizontal',
-        swipeOut: false,
-        allowedDirection: 'left',
-        swipeOutBy: '65px',
-        swipeOutThreshold: '65px',
-        max: '65px',
+        swipeOut: true,
+        swipeOutBy: '25%',
+        swipeOutThreshold: '25%'
       },
     };
   },
   methods: {
     toggleDeletePanel(id) {
+      console.log('test');
+
       this.$set(this.showConfirmDeletion, id, this.showConfirmDeletion[id] ? false : true);
     },
     deleteNote(id) {
@@ -79,29 +84,47 @@ export default {
   grid-column-gap: 20px;
   & .note {
     position: relative;
-    &-delete {
-      z-index: -1;
+    &-buttons {
+      z-index: 1;
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background-color: red;
+      background: linear-gradient(to right, green 50%, red 50%);;
       border-radius: 13px;
-      & svg {
-        position: absolute;
-        top: calc(50% - 12.5px);
-        right: 20px;
-        width: 25px;
-        height: 25px;
-        & path {
-          fill: $white;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      &__item {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        &--detele {
+          border: none;
+          background-color: initial;
+          svg {
+            margin-right: -80px;
+          }
+        }
+        &--edit {
+          & svg {
+            margin-left: -80px;
+          }
+        }
+        & svg {
+          width: 25px;
+          height: 25px;
+          & path {
+            color: $white;
+          }
         }
       }
     }
     &-content {
       position: relative;
-      z-index: 1;
+      z-index: 2;
       height: 100%;
       background-color: $white;
       padding: 20px;

@@ -1,7 +1,7 @@
 <template>
-  <div class="buttons-bar">
+  <div class="buttons-bar --mobile">
     <div class="buttons-bar__content">
-      <div class="buttons-bar__left">
+      <div class="buttons-bar__element buttons-bar__left">
         <button
           type="button"
           class="buttons-bar__undo buttons-bar__item btn btn--circle"
@@ -13,17 +13,16 @@
           type="button"
           class="buttons-bar__note-trash buttons-bar__item btn btn--circle"
           @click="showConfirmDeletion = !showConfirmDeletion"
-          v-if="this.getNote"
         >
           <font-awesome-icon :icon="['far', 'trash-alt']" />
         </button>
       </div>
-      <div class="buttons-bar__center">     
+      <div class="buttons-bar__center">
         <button type="submit" class="buttons-bar__note-save buttons-bar__item">
           <font-awesome-icon icon="check" />
         </button>
       </div>
-      <div class="buttoms-bar__right">
+      <div class="buttons-bar__element buttons-bar__right">
         <button
           type="button"
           class="buttons-bar__task-create buttons-bar__item btn btn--circle"
@@ -52,8 +51,6 @@
           >Confirm</router-link>
         </div>
       </div>
-    </transition>
-    <transition name="fade">
       <div
         class="confirmation-panel confirmation-panel--delete"
         v-if="showConfirmDeletion"
@@ -116,39 +113,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.buttons-bar {
-  &__content {
-    display: grid;
-    grid-template-columns: 1fr 50px 1fr;
-    grid-column-gap: 10px;
-    height: 100%;
-    padding: 10px 20px;
+  .confirmation-panel {
+    position: fixed;
   }
-  &__item {
-    border: none;
-    background-color: initial;
-  }
-  &__note-save {
-    position: absolute;
-    bottom: 10px;
-    left: calc(50% - 25px);
-    box-shadow: 0 3px 4px #888888;
-    width: 50px;
-    height: 50px;
-    overflow: hidden;
-    background-color: $primary;
-    color: $white;
-    border-radius: 50px;
-    transition: .3s;
-    display: flex;
-    align-items: center;
-    white-space: nowrap;
-    padding: 0;
-    cursor: pointer;
-    border: 0;
-    & svg {
-      margin: 0 19px;
-    }
-  }
-}
 </style>

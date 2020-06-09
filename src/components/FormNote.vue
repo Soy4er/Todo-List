@@ -12,8 +12,8 @@
       />
     </div>
     <div class="note-tasks">
-      <div class="note-tasks__item mb-10" v-for="(task, index) in note.tasks" :key="index">
-        <div class="note-tasks__item-element note-tasks__item-checkbox">
+      <div class="note-tasks__item mb-10" v-swipeable="dragToRefresh" v-for="(task, index) in note.tasks" :key="index">
+        <div class="note-tasks__item-element note-tasks__item-checkbox --desktop">
           <input
             type="checkbox"
             :name="`done_${task.id}`"
@@ -35,10 +35,26 @@
             placeholder="Task name"
           />
         </div>
-        <div class="note-tasks__item-element">
+        <div class="note-tasks__item-element --desktop">
           <div class="note-tasks__item-delete" @click="deleteTask(index)">
             <font-awesome-icon icon="times" />
           </div>
+        </div>
+        <div class="note-buttons">
+          <div class="note-buttons__item note-buttons__item--checkbox">
+            <input
+              type="checkbox"
+              :name="`done_${task.id}`"
+              :id="`done_${task.id}`"
+              v-model="task.done"
+            />
+            <label :for="`done_${task.id}`">
+              <font-awesome-icon icon="check" />
+            </label>
+          </div>
+          <button type="button" class="note-buttons__item note-buttons__item--detele" @click="toggleDeletePanel(note.id)">
+            <font-awesome-icon :icon="['far', 'trash-alt']" />
+          </button>
         </div>
       </div>
     </div>
@@ -56,7 +72,13 @@ export default {
   props: ['noteID'],
   data() {
     return {
-      note: { name: "", tasks: [] }
+      note: { name: "", tasks: [] },
+      dragToRefresh: {
+        type: 'horizontal',
+        swipeOut: true,
+        swipeOutBy: '25%',
+        swipeOutThreshold: '25%'
+      },
     };
   },
   methods: {
@@ -122,9 +144,8 @@ export default {
   }
   &-name {
     font-size: $font-size-lg;
-    background-color: $gray-300;
-    border-radius: 5px;
-    padding: 10px;
+    border-bottom: 1px solid #EDEDED;
+    padding: 10px 0;
     & input {
       font-size: $font-size-lg;
     }
@@ -190,6 +211,9 @@ export default {
 @media (max-width: 768px) {
   .note {
     width: auto;
+  }
+  .note-tasks__item {
+    grid-template-columns: 1fr;
   }
 }
 </style>

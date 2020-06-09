@@ -1,7 +1,7 @@
 <template>
   <main>
     <div class="container">
-      <h1 class="title text-center mt-50 mb-10">{{`${this.getNote ? 'Update' : 'Create'} Note`}}</h1>
+      <h1 class="title text-center mb-10">{{`${this.getNote ? 'Update' : 'Create'} Note`}}</h1>
       <FormNote :noteID="noteID" />
     </div>
   </main>

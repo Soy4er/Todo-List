@@ -1,5 +1,5 @@
 <template>
-  <div class="buttons-bar">
+  <div class="buttons-bar --desktop">
     <button
       type="button"
       class="buttons-bar__task-create buttons-bar__item btn btn--circle"
