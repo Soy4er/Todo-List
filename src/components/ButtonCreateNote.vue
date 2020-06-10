@@ -12,10 +12,15 @@ import { mapGetters } from "vuex";
 
 export default {
   methods: {
-    goToCreateNote() { this.$router.push({ name: "updateNote", params: { id: this.countNotes + 1 } }) }
+    goToCreateNote() {
+      this.$router.push({
+        name: "updateNote",
+        params: { id: this.countNotes + 1 }
+      });
+    }
   },
   computed: {
-    ...mapGetters([ 'countNotes' ])
+    ...mapGetters(["countNotes"])
   }
 };
 </script>
@@ -33,7 +38,7 @@ export default {
     background-color: $primary;
     color: $white;
     border-radius: 50px;
-    transition: .3s;
+    transition: 0.3s;
     display: flex;
     align-items: center;
     white-space: nowrap;

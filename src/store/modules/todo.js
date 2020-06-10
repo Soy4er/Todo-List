@@ -3,7 +3,7 @@ import axios from 'axios'
 
 export default {
   actions: {
-    async startApp(ctx) {
+    startApp(ctx) {
       localStorage.clear()
       if (!localStorage.getItem('notes')) {
         axios.get('/notes.json')
@@ -77,7 +77,7 @@ export default {
   },
   getters: {
     getNotes(state) { return state.notes },
-    getNoteByID: (state) => (noteID) => { console.log(state.notes);return state.notes.find(({ id }) => id == noteID) },
+    getNoteByID: (state) => (noteID) => { return state.notes.find(({ id }) => id == noteID) },
     countNotes(state) { return state.notes.length }
   }
 }

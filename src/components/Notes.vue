@@ -3,7 +3,11 @@
     <div class="note" v-for="(note, index) in notes" :key="index">
       <div class="note-content" v-swipeable="dragToRefresh">
         <div class="note-header">
-          <div class="note-header__name">{{note.name}}</div>
+          <router-link
+            :to="{name: 'updateNote', params: {id: note.id}}"
+            class="note-header__name --desktop"
+          >{{note.name}}</router-link>
+          <div class="note-header__name --mobile">{{note.name}}</div>
           <div class="note-header__buttons d-flex">
             <div class="note-header__icon p-relative">
               <font-awesome-icon :icon="['far', 'trash-alt']" @click="toggleDeletePanel(note.id)" />
@@ -18,10 +22,17 @@
         </ul>
       </div>
       <div class="note-buttons">
-        <router-link :to="{name: 'updateNote', params: {id: note.id}}" class="note-buttons__item note-buttons__item--edit">
+        <router-link
+          :to="{name: 'updateNote', params: {id: note.id}}"
+          class="note-buttons__item note-buttons__item--edit"
+        >
           <font-awesome-icon :icon="['far', 'edit']" />
         </router-link>
-        <button type="button" class="note-buttons__item note-buttons__item--detele" @click="toggleDeletePanel(note.id)">
+        <button
+          type="button"
+          class="note-buttons__item note-buttons__item--detele"
+          @click="toggleDeletePanel(note.id)"
+        >
           <font-awesome-icon :icon="['far', 'trash-alt']" />
         </button>
       </div>
@@ -52,18 +63,20 @@ export default {
     return {
       showConfirmDeletion: [],
       dragToRefresh: {
-        type: 'horizontal',
+        type: "horizontal",
         swipeOut: true,
-        swipeOutBy: '25%',
-        swipeOutThreshold: '25%'
-      },
+        swipeOutBy: "25%",
+        swipeOutThreshold: "25%"
+      }
     };
   },
   methods: {
     toggleDeletePanel(id) {
-      console.log('test');
-
-      this.$set(this.showConfirmDeletion, id, this.showConfirmDeletion[id] ? false : true);
+      this.$set(
+        this.showConfirmDeletion,
+        id,
+        this.showConfirmDeletion[id] ? false : true
+      );
     },
     deleteNote(id) {
       this.$store.commit("deleteNote", id);
@@ -91,7 +104,7 @@ export default {
       left: 0;
       width: 100%;
       height: 100%;
-      background: linear-gradient(to right, green 50%, red 50%);;
+      background: linear-gradient(to right, green 50%, red 50%);
       border-radius: 13px;
       display: grid;
       grid-template-columns: 1fr 1fr;

@@ -172,6 +172,7 @@ ul {
     position        : fixed;
     bottom          : 20px;
     top             : auto;
+    z-index         : 10;
     &__content {
         display              : grid;
         grid-gap             : 10px;
@@ -224,11 +225,8 @@ ul {
     }
 }
 
-.--desktop {
-    display: block;
-}
 .--mobile {
-    display: none;
+    display: none !important;
 }
 @media (max-width: 768px) {
     .--desktop {

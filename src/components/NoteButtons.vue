@@ -1,15 +1,15 @@
 <template>
-  <div class="buttons-bar --desktop">
+  <div class="buttons-fbar --desktop">
     <button
       type="button"
-      class="buttons-bar__task-create buttons-bar__item btn btn--circle"
+      class="buttons-fbar__task-create buttons-fbar__item btn btn--circle"
       @click="createTask"
     >
       <font-awesome-icon icon="plus" />Create a new task
     </button>
     <button
       type="button"
-      class="buttons-bar__undo buttons-bar__item btn btn--circle"
+      class="buttons-fbar__undo buttons-fbar__item btn btn--circle"
       @click="showConfirmUndo = !showConfirmUndo"
     >
       <font-awesome-icon icon="undo-alt" />Undo changes to a note
@@ -36,7 +36,7 @@
     </transition>
     <button
       type="button"
-      class="buttons-bar__note-trash buttons-bar__item btn btn--circle"
+      class="buttons-fbar__note-trash buttons-fbar__item btn btn--circle"
       @click="showConfirmDeletion = !showConfirmDeletion"
       v-if="this.getNote"
     >
@@ -62,7 +62,7 @@
         </div>
       </div>
     </transition>
-    <button type="submit" class="buttons-bar__note-save buttons-bar__item">
+    <button type="submit" class="buttons-fbar__note-save buttons-fbar__item">
       <font-awesome-icon icon="check" />Save a note
     </button>
   </div>
@@ -108,7 +108,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.buttons-bar {
+.buttons-fbar {
   position: absolute;
   top: 20px;
   left: 520px;
@@ -166,7 +166,7 @@ export default {
 }
 
 @media (max-width: 768px) {
-  .buttons-bar {
+  .buttons-fbar {
     display: none;
   }
 }

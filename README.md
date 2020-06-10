@@ -1,24 +1,21 @@
-# todo
+# ToDo List
 
-## Project setup
-```
-npm install
-```
+> Test task for developing a to-do list with mobile design
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+## Build setup through Docker
 
-### Compiles and minifies for production
-```
-npm run build
+``` bash
+# install dependencies
+$ docker-compose up --build -d
 ```
 
-### Lints and fixes files
-```
-npm run lint
-```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+## Build Setup
+
+``` bash
+# install dependencies
+$ npm install # Or yarn install
+
+# serve with hot reload at localhost:3000
+$ npm run dev
+```

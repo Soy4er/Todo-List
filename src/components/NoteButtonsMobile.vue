@@ -113,7 +113,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .confirmation-panel {
-    position: fixed;
-  }
+.confirmation-panel {
+  position: fixed;
+}
 </style>

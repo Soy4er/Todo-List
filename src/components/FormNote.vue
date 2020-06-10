@@ -12,7 +12,7 @@
       />
     </div>
     <div class="note-tasks">
-      <div class="note-tasks__item mb-10" v-swipeable="dragToRefresh" v-for="(task, index) in note.tasks" :key="index">
+      <div class="note-tasks__item mb-10" v-for="(task, index) in note.tasks" :key="index">
         <div class="note-tasks__item-element note-tasks__item-checkbox --desktop">
           <input
             type="checkbox"
@@ -24,7 +24,11 @@
             <font-awesome-icon icon="check" />
           </label>
         </div>
-        <div class="note-tasks__item-element note-tasks__item-name">
+        <div
+          class="note-tasks__item-element note-tasks__item-name"
+          :class="{'note-tasks__item-element--active': task.done}"
+          v-swipeable="dragToRefresh"
+        >
           <TextareaAutosize
             :min-height="20"
             :max-height="100"
@@ -33,6 +37,7 @@
             v-model.trim="task.name"
             class="note-input"
             placeholder="Task name"
+            :disabled="task.done"
           />
         </div>
         <div class="note-tasks__item-element --desktop">
@@ -40,7 +45,7 @@
             <font-awesome-icon icon="times" />
           </div>
         </div>
-        <div class="note-buttons">
+        <div class="note-buttons --mobile">
           <div class="note-buttons__item note-buttons__item--checkbox">
             <input
               type="checkbox"
@@ -52,7 +57,11 @@
               <font-awesome-icon icon="check" />
             </label>
           </div>
-          <button type="button" class="note-buttons__item note-buttons__item--detele" @click="toggleDeletePanel(note.id)">
+          <button
+            type="button"
+            class="note-buttons__item note-buttons__item--detele"
+            @click="deleteTask"
+          >
             <font-awesome-icon :icon="['far', 'trash-alt']" />
           </button>
         </div>
@@ -69,16 +78,16 @@ import NoteButtons from "@/components/NoteButtons.vue";
 import NoteButtonsMobile from "@/components/NoteButtonsMobile.vue";
 
 export default {
-  props: ['noteID'],
+  props: ["noteID"],
   data() {
     return {
       note: { name: "", tasks: [] },
       dragToRefresh: {
-        type: 'horizontal',
+        type: "horizontal",
         swipeOut: true,
-        swipeOutBy: '25%',
-        swipeOutThreshold: '25%'
-      },
+        swipeOutBy: "25%",
+        swipeOutThreshold: "25%"
+      }
     };
   },
   methods: {
@@ -105,8 +114,8 @@ export default {
       });
     }
   },
-  mounted () {
-    const notes = this.getNote
+  mounted() {
+    const notes = this.getNote;
     if (notes) {
       this.note.name = notes.name;
       this.note.tasks = notes.tasks;
@@ -144,7 +153,7 @@ export default {
   }
   &-name {
     font-size: $font-size-lg;
-    border-bottom: 1px solid #EDEDED;
+    border-bottom: 1px solid #ededed;
     padding: 10px 0;
     & input {
       font-size: $font-size-lg;
@@ -155,6 +164,7 @@ export default {
       display: grid;
       grid-template-columns: auto 1fr auto;
       grid-column-gap: 10px;
+      position: relative;
       &:last-child {
         margin-bottom: 0;
       }
@@ -167,6 +177,15 @@ export default {
         background-color: $gray-300;
         border-radius: 5px;
         padding: 10px;
+        position: relative;
+        z-index: 2;
+        border: 1px solid #ededed;
+        &.note-tasks__item-element--active {
+          border: 1px solid $primary;
+          & .note-input {
+            opacity: 0.3;
+          }
+        }
       }
       &-checkbox {
         & input {
@@ -206,6 +225,68 @@ export default {
       }
     }
   }
+  &-buttons {
+    position: absolute;
+    top: 0;
+    z-index: 1;
+    background: linear-gradient(to right, green 50%, red 50%);
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+    &__item {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      &--checkbox {
+        & input {
+          display: none;
+          &:checked + label svg {
+            display: block;
+          }
+        }
+        & label {
+          width: 30px;
+          height: 30px;
+          background-color: $gray-300;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border-radius: 50%;
+          cursor: pointer;
+          margin-left: -80px;
+          & svg {
+            display: none;
+            width: 20px;
+            height: 20px;
+            & path {
+              color: $primary;
+            }
+          }
+        }
+      }
+      &--detele {
+        border: none;
+        background-color: initial;
+        svg {
+          margin-right: -80px;
+        }
+      }
+      &--edit {
+        & svg {
+          margin-left: -80px;
+        }
+      }
+      & svg {
+        width: 25px;
+        height: 25px;
+        & path {
+          color: $white;
+        }
+      }
+    }
+  }
 }
 
 @media (max-width: 768px) {
@@ -213,7 +294,10 @@ export default {
     width: auto;
   }
   .note-tasks__item {
-    grid-template-columns: 1fr;
+    display: block;
+  }
+  .note-buttons {
+    display: flex !important;
   }
 }
 </style>

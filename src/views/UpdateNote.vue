@@ -14,12 +14,14 @@ import FormNote from "@/components/FormNote.vue";
 export default {
   data() {
     return {
-      noteID: this.$route.params.id,
+      noteID: this.$route.params.id
     };
   },
   computed: {
     ...mapGetters(["getNoteByID"]),
-    getNote() { return this.getNoteByID(this.noteID); }
+    getNote() {
+      return this.getNoteByID(this.noteID);
+    }
   },
   components: {
     FormNote
